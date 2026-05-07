@@ -1,2 +1,2 @@
 APPNAME = testApp
-OF_ROOT = ../../../../..
+OF_ROOT = ../../..
