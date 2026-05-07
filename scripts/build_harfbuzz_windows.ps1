@@ -26,7 +26,7 @@ cmake -B $buildDir -S $srcDir `
     -DHB_HAVE_GLIB=OFF -DHB_HAVE_GOBJECT=OFF -DHB_HAVE_ICU=OFF `
     -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_TESTS=OFF -DHB_BUILD_UTILS=OFF
 
-cmake --build $buildDir --config Release
+cmake --build $buildDir --config Release -- /maxCpuCount
 
 $libDst = Join-Path $OUT_DIR "lib\vs"
 New-Item -ItemType Directory -Force -Path $libDst | Out-Null
