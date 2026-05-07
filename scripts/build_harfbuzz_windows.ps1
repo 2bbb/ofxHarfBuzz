@@ -12,9 +12,9 @@ $TMP = $env:TEMP
 
 $srcDir = "$TMP\harfbuzz-$HB_VERSION"
 if (-not (Test-Path $srcDir)) {
-    $archive = "$TMP\harfbuzz.tar.xz"
-    curl.exe -sL "https://github.com/harfbuzz/harfbuzz/releases/download/$HB_VERSION/harfbuzz-$HB_VERSION.tar.xz" -o $archive
-    tar xf $archive -C $TMP
+    $archive = "$TMP\harfbuzz.zip"
+    curl.exe -sL "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/$HB_VERSION.zip" -o $archive
+    Expand-Archive -Path $archive -DestinationPath $TMP -Force
     Remove-Item $archive
 }
 
