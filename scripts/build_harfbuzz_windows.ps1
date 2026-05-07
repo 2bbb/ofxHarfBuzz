@@ -3,6 +3,7 @@
 param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+$ProgressPreference = 'SilentlyContinue'
 
 $HB_VERSION = "10.4.0"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -11,10 +12,8 @@ $TMP = $env:TEMP
 
 $srcDir = "$TMP\harfbuzz-$HB_VERSION"
 if (-not (Test-Path $srcDir)) {
-    $archive = "$TMP\harfbuzz.tar.gz"
-    Invoke-WebRequest `
-        "https://github.com/harfbuzz/harfbuzz/releases/download/$HB_VERSION/harfbuzz-$HB_VERSION.tar.xz" `
-        -OutFile $archive
+    $archive = "$TMP\harfbuzz.tar.xz"
+    curl.exe -sL "https://github.com/harfbuzz/harfbuzz/releases/download/$HB_VERSION/harfbuzz-$HB_VERSION.tar.xz" -o $archive
     tar xf $archive -C $TMP
     Remove-Item $archive
 }
