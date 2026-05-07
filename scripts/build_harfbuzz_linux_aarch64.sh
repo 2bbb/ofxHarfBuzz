@@ -23,6 +23,6 @@ cmake -B /tmp/hb-build-aarch64 -S /tmp/harfbuzz-${HB_VERSION} \
 cmake --build /tmp/hb-build-aarch64 -j$(nproc)
 
 mkdir -p "${OUT_DIR}/lib/linuxaarch64"
-cp /tmp/hb-build-aarch64/src/libharfbuzz.a "${OUT_DIR}/lib/linuxaarch64/"
+cp /tmp/hb-build-aarch64/libharfbuzz.a "${OUT_DIR}/lib/linuxaarch64/"
 
 echo "Done: ${OUT_DIR}/lib/linuxaarch64/libharfbuzz.a"

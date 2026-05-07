@@ -20,7 +20,7 @@ cmake -B /tmp/hb-build-linux64 -S /tmp/harfbuzz-${HB_VERSION} \
 cmake --build /tmp/hb-build-linux64 -j$(nproc)
 
 mkdir -p "${OUT_DIR}/lib/linux64"
-cp /tmp/hb-build-linux64/src/libharfbuzz.a "${OUT_DIR}/lib/linux64/"
+cp /tmp/hb-build-linux64/libharfbuzz.a "${OUT_DIR}/lib/linux64/"
 
 # headers (already present from macOS build, but copy if missing)
 mkdir -p "${OUT_DIR}/include"

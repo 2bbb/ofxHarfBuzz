@@ -31,7 +31,7 @@ cmake --build $buildDir --config Release
 
 $libDst = Join-Path $OUT_DIR "lib\vs"
 New-Item -ItemType Directory -Force -Path $libDst | Out-Null
-Copy-Item "$buildDir\src\Release\harfbuzz.lib" "$libDst\"
+Copy-Item "$buildDir\Release\harfbuzz.lib" "$libDst\"
 
 $incDst = Join-Path $OUT_DIR "include"
 New-Item -ItemType Directory -Force -Path $incDst | Out-Null
