@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    uses: 2bbb/of-actions/.github/workflows/build-addon.yml@main
+    with:
+      of_version: "0.12.1"
+      addon_name: "ofxHarfBuzz"
+      test_app: "testApp"
+      test_mode: "test"

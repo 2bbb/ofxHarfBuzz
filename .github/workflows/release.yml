@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    uses: 2bbb/of-actions/.github/workflows/build-addon.yml@main
+    with:
+      of_version: "0.12.1"
+      addon_name: "ofxHarfBuzz"
+      test_app: "testApp"
+      test_mode: "test"
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create zip
+        run: |
+          cd ..
+          zip -r ofxHarfBuzz.zip ofxHarfBuzz \
+            --exclude "ofxHarfBuzz/.git/*" \
+            --exclude "ofxHarfBuzz/testApp/bin/*" \
+            --exclude "ofxHarfBuzz/testApp/obj/*" \
+            --exclude "ofxHarfBuzz/testApp/*.xcodeproj/*"
+          mv ofxHarfBuzz.zip ofxHarfBuzz/
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'latest' }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'latest' }}
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          files: ofxHarfBuzz.zip
