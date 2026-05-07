@@ -1,0 +1,68 @@
+name: Build Prebuilt Libs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (already committed — verify only)
+        run: |
+          ls libs/harfbuzz/lib/osx/libharfbuzz.a
+          file libs/harfbuzz/lib/osx/libharfbuzz.a
+          lipo -info libs/harfbuzz/lib/osx/libharfbuzz.a
+
+  build-linux64:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cmake
+        run: sudo apt-get install -y cmake
+      - name: Build
+        run: bash scripts/build_harfbuzz_linux.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: harfbuzz-linux64
+          path: libs/harfbuzz/lib/linux64/libharfbuzz.a
+
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        shell: pwsh
+        run: .\scripts\build_harfbuzz_windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: harfbuzz-windows
+          path: libs/harfbuzz/lib/vs/harfbuzz.lib
+
+  commit-libs:
+    needs: [build-linux64, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: harfbuzz-linux64
+          path: libs/harfbuzz/lib/linux64
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: harfbuzz-windows
+          path: libs/harfbuzz/lib/vs
+
+      - name: Commit libs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add libs/harfbuzz/lib/linux64/ libs/harfbuzz/lib/vs/
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "chore: update prebuilt libs (linux64, windows) [skip ci]"
+          git push
