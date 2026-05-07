@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    uses: 2bbb/of-actions/.github/workflows/build-addon.yml@feat/pre-build-script
+    uses: 2bbb/of-actions/.github/workflows/build-addon.yml@main
     with:
       of_version: "0.12.1"
       addon_name: "ofxHarfBuzz"
