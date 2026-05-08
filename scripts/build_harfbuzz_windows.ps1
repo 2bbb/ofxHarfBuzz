@@ -5,17 +5,42 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 $ProgressPreference = 'SilentlyContinue'
 
-# ── Prerequisite checks ───────────────────────────────────────────────────────
+# ── Tool resolver ─────────────────────────────────────────────────────────────
+# Find a tool in PATH; if missing, check known install locations and add to PATH.
 
-if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {
+function Resolve-Tool {
+    param(
+        [string]$Name,
+        [string[]]$KnownPaths,
+        [string]$InstallHint
+    )
+    if (Get-Command $Name -ErrorAction SilentlyContinue) { return }
+
+    foreach ($dir in $KnownPaths) {
+        if (Test-Path (Join-Path $dir "$Name.exe")) {
+            Write-Host "==> $Name not in PATH, using: $dir"
+            $env:Path = "$dir;$env:Path"
+            return
+        }
+    }
+
     Write-Error @"
-ERROR: cmake not found in PATH.
-Install it with:
-    winget install Kitware.CMake
-Then restart PowerShell and re-run this script.
+ERROR: '$Name' not found in PATH or known install locations.
+$InstallHint
+After installing, restart PowerShell (or open a new terminal) and re-run.
 "@
     exit 1
 }
+
+# ── Prerequisite checks ───────────────────────────────────────────────────────
+
+# cmake: winget installs to Program Files\CMake\bin; VS bundles its own copy too
+Resolve-Tool cmake `
+    -KnownPaths @(
+        "C:\Program Files\CMake\bin",
+        "C:\Program Files (x86)\CMake\bin"
+    ) `
+    -InstallHint "Install cmake with:  winget install Kitware.CMake"
 
 # ── Build ─────────────────────────────────────────────────────────────────────
 
