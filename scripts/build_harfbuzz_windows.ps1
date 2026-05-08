@@ -65,6 +65,7 @@ Write-Host "==> Configuring..."
 cmake -B $buildDir -S $srcDir `
     -A x64 `
     -DCMAKE_BUILD_TYPE=Release `
+    -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
     -DBUILD_SHARED_LIBS=OFF `
     -DHB_HAVE_GLIB=OFF -DHB_HAVE_GOBJECT=OFF -DHB_HAVE_ICU=OFF `
     -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_TESTS=OFF -DHB_BUILD_UTILS=OFF
