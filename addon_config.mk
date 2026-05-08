@@ -8,6 +8,10 @@ meta:
 common:
 	ADDON_INCLUDES = src
 	ADDON_INCLUDES += libs/harfbuzz/include
+	# ofxHarfBuzz.cpp is the unity-build entry for Xcode; exclude individual TUs from make
+	ADDON_SOURCES_EXCLUDE = src/ofxHbFace.cpp
+	ADDON_SOURCES_EXCLUDE += src/ofxHbFont.cpp
+	ADDON_SOURCES_EXCLUDE += src/ofxHbShaper.cpp
 
 osx:
 	ADDON_LIBS = libs/harfbuzz/lib/osx/libharfbuzz.a
